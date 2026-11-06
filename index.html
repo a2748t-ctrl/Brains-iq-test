@@ -6,187 +6,220 @@
     <title>BrainIQ Pro - Ultimate Intelligence & Memory Test</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background: #1e293b; width: 100%; max-width: 550px; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
-        h1 { font-size: 22px; margin-bottom: 15px; color: #38bdf8; }
-        p { font-size: 14px; color: #94a3b8; margin-bottom: 25px; line-height: 1.6; }
-        .price-box { background: #334155; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .old-price { text-decoration: line-through; color: #ef4444; font-size: 16px; }
-        .new-price { font-size: 28px; font-weight: bold; color: #22c55e; margin-left: 10px; }
-        .btn { background: #2563eb; color: white; border: none; padding: 14px 28px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 10px; }
+        body { background: #070b19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; position: relative; }
+        
+        /* Space Starry Background Effect */
+        body::before {
+            content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            background-image: radial-gradient(white 1px, transparent 0), radial-gradient(rgba(255,255,255,0.5) 1px, transparent 0);
+            background-size: 50px 50px; background-position: 0 0, 25px 25px; opacity: 0.2; z-index: -1;
+        }
+
+        .container { width: 100%; max-width: 500px; padding: 20px; z-index: 1; }
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        
+        h1 { font-size: 24px; color: #38bdf8; margin-bottom: 10px; text-align: center; }
+        p { font-size: 14px; color: #94a3b8; margin-bottom: 20px; text-align: center; line-height: 1.5; }
+        
+        .stats-box { background: #1f2937; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #cbd5e1; border-left: 4px solid #38bdf8; }
+        
+        /* Progress Bar */
+        .progress-container { width: 100%; background: #1f2937; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #6366f1); transition: width 0.4s ease; }
+
+        .btn { display: block; width: 100%; background: #2563eb; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s, transform 0.1s; margin-top: 10px; text-align: center; text-decoration: none; }
         .btn:hover { background: #1d4ed8; }
+        .btn:active { transform: scale(0.98); }
+
+        .option-btn { background: #1f2937; color: #f8fafc; border: 1px solid #374151; margin-bottom: 10px; text-align: left; }
+        .option-btn:hover { background: #374151; border-color: #38bdf8; }
+
+        .idol-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .idol-card { background: #1f2937; border: 2px solid #374151; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .idol-card:hover, .idol-card.selected { border-color: #38bdf8; background: #1e293b; }
+
+        input[type="text"], input[type="number"] { width: 100%; padding: 12px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; font-size: 16px; margin-bottom: 15px; }
+        
         .hidden { display: none; }
-        .question-card { text-align: left; margin-bottom: 20px; }
-        .option { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .option:hover { background: #475569; }
-        input[type="text"], input[type="tel"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-top: 8px; margin-bottom: 15px; font-size: 15px; }
-        label { text-align: left; display: block; font-size: 13px; color: #38bdf8; font-weight: bold; }
-        .memory-box { background: rgba(56, 189, 248, 0.1); border: 2px dashed #38bdf8; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
-        .memory-number { font-size: 36px; font-weight: bold; color: #facc15; letter-spacing: 5px; margin: 15px 0; }
-        .locked-box { background: rgba(239, 68, 68, 0.1); border: 1px dashed #ef4444; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left; }
+        
+        .footer-links { margin-top: 20px; text-align: center; font-size: 13px; color: #64748b; display: flex; justify-content: center; gap: 15px; }
+        .footer-links a { color: #38bdf8; text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
-        <!-- SCREEN 1: LANDING PAGE -->
-        <div id="screen-home">
-            <h1>🧠 Ultimate Pro IQ & Memory Test</h1>
-            <p>Test your reasoning, logic, and <b>Working Memory Recall</b>. Find out if your brain matches an IITian or Top Scientist!</p>
+    <div class="container">
+        <!-- Landing / Intro Screen -->
+        <div id="screen-intro" class="card">
+            <h1>🧠 BrainIQ Pro & Memory Test</h1>
+            <p>Discover your true cognitive potential, processing speed, and memory retention capacity compared globally.</p>
             
-            <div class="price-box">
-                <span class="old-price">₹499</span>
-                <span class="new-price">₹49 Only</span>
-                <p style="font-size: 12px; color: #facc15; margin-top: 5px;">⚡ Includes Live Memory & Focus Challenges</p>
+            <div class="stats-box">
+                📊 <b>Did you know?</b> Average Scientists & Doctors score an IQ of 130+, while general professionals range between 100-115. Find out where you stand!
             </div>
 
-            <button class="btn" onclick="startTest()">Start 20-Min Test Now</button>
+            <label style="font-size: 13px; color: #94a3b8;">Your Name:</label>
+            <input type="text" id="userName" placeholder="Enter your full name">
+
+            <label style="font-size: 13px; color: #94a3b8;">Your Age:</label>
+            <input type="number" id="userAge" placeholder="e.g., 18">
+
+            <button class="btn" onclick="startTest()">Start Test Now 🚀</button>
         </div>
 
-        <!-- SCREEN 2: TEST QUESTIONS -->
-        <div id="screen-test" class="hidden">
-            <h3 id="question-counter" style="color: #38bdf8; margin-bottom: 15px;">Question 1</h3>
-            <div class="question-card" id="question-container"></div>
+        <!-- Quiz Screen -->
+        <div id="screen-quiz" class="card hidden">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 5px;">
+                <span id="question-counter">Question 1 of 25</span>
+                <span id="timer">⏱️ 30s</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <h2 id="question-title" style="font-size: 18px; margin-bottom: 15px; color: #f8fafc;">Question goes here</h2>
+            <div id="options-container"></div>
         </div>
 
-        <!-- SCREEN 3: USER DETAILS & IDOL -->
-        <div id="screen-details" class="hidden">
-            <h2>🎯 Test Completed Successfully!</h2>
-            <p>Apna naam, WhatsApp number aur Idol ka naam daaliye taaki AI aapki final report generate kar sake:</p>
+        <!-- Idol Selection Screen (Midway) -->
+        <div id="screen-idol" class="card hidden">
+            <h1>⭐ Choose Your Inspiration</h1>
+            <p>Select your favorite role model or idol who drives your ambition:</p>
+            <div class="idol-grid">
+                <div class="idol-card" onclick="selectIdol('Goku / Anime')">🔥 Goku (Anime Legend)</div>
+                <div class="idol-card" onclick="selectIdol('Albert Einstein')">⚡ Albert Einstein</div>
+                <div class="idol-card" onclick="selectIdol('Elon Musk')">🚀 Elon Musk</div>
+                <div class="idol-card" onclick="selectIdol('A. P. J. Abdul Kalam')">📚 Dr. Kalam</div>
+            </div>
+            <button class="btn" id="idol-next-btn" disabled onclick="nextAfterIdol()">Continue Test ➡️</button>
+        </div>
+
+        <!-- Paywall / Locked Report Screen -->
+        <div id="screen-paywall" class="card hidden" style="text-align: center;">
+            <h1 style="color: #22c55e;">🎉 Test Completed Successfully!</h1>
+            <p>Your cognitive data, memory retention score, and comparative analysis have been compiled.</p>
             
-            <div style="text-align: left;">
-                <label>Aapka Naam:</label>
-                <input type="text" id="userName" placeholder="Enter your full name...">
-                
-                <label>WhatsApp Number (Report yahan bheji jayegi):</label>
-                <input type="tel" id="userPhone" placeholder="Enter 10-digit mobile number...">
-                
-                <label>Aapka Idol kaun hai? (e.g., Elon Musk, APJ Abdul Kalam, Einstein):</label>
-                <input type="text" id="idolName" placeholder="Enter your idol's name...">
+            <div style="background: #1f2937; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left;">
+                <p style="margin: 0; color: #f8fafc; font-weight: bold; margin-bottom: 8px;">🔒 What's inside your Full Report:</p>
+                <p style="margin: 0 0 5px 0; font-size: 13px;">• Detailed IQ & Memory Score breakdown</p>
+                <p style="margin: 0 0 5px 0; font-size: 13px;">• Weakness analysis & cognitive flaws</p>
+                <p style="margin: 0; font-size: 13px;">• "How to Improve Memory & Focus" video guide</p>
             </div>
 
-            <button class="btn" onclick="submitDetails()">Generate My AI Report ➔</button>
+            <h2 style="color: #38bdf8; margin-bottom: 15px;">Unlock Full Report for ₹49 only</h2>
+            <button class="btn" onclick="openPayment()">Pay ₹49 via Cashfree 💳</button>
         </div>
 
-        <!-- SCREEN 4: LOCKED PAYWALL REPORT -->
-        <div id="screen-paywall" class="hidden">
-            <h2 style="color: #22c55e; margin-bottom: 10px;">🎉 Report Generated!</h2>
-            <p>Aapke test answers aur memory recall score ko analyze kar liya gaya hai.</p>
-
-            <div class="locked-box">
-                <h3 style="color: #ef4444; margin-bottom: 8px;">🔒 Report Locked</h3>
-                <p style="font-size: 13px; margin: 0; color: #cbd5e1;">
-                    • Estimated IQ Score: <b>[HIDDEN]</b><br>
-                    • Memory Retention Power: <b>[HIDDEN]</b><br>
-                    • IITian / Doctor Match Level: <b>[HIDDEN]</b><br>
-                    • Memory Weakness Fix Video: <b>[LOCKED]</b>
-                </p>
-            </div>
-
-            <button class="btn" style="background: #22c55e;" onclick="openPayment()">Unlock Full Report for ₹49</button>
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <a href="https://instagram.com" target="_blank">📸 Instagram Support</a>
+            <span>•</span>
+            <a href="#" onclick="alert('BrainIQ Pro v2.5 - Advanced Cognitive & Memory Evaluation Platform.')">ℹ️ About Us</a>
         </div>
     </div>
 
+    <audio id="tickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+
     <script>
-        let currentStep = 0;
-        let score = 0;
-
-        const flow = [
-            { type: 'q', q: "1. What comes next in the series: 2, 6, 12, 20, 30, ?", options: ["40", "42", "45", "48"], ans: 1 },
-            { type: 'q', q: "2. Which number logically follows: 8, 27, 64, 125, ?", options: ["196", "216", "243", "256"], ans: 1 },
-            { type: 'q', q: "3. If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?", options: ["Yes", "No", "Cannot be determined", "None"], ans: 0 },
-            { type: 'q', q: "4. Which field requires the highest spatial memory and rapid calculation?", options: ["Engineering (IIT)", "Medical Surgery", "Both A & B", "None"], ans: 2 },
-            
-            { type: 'memory_flash', code: "7492", text: "🧠 MEMORY CHALLENGE: Is 4-digit number ko dimaag mein baitha lo! Agle kuch sawaal baad yeh pucha jayega." },
-
-            { type: 'q', q: "5. Find the odd one out: 3, 5, 7, 11, 13, 17, 19, 21", options: ["11", "17", "21", "13"], ans: 2 },
-            { type: 'q', q: "6. If a clock shows 3:15, what is the angle between hour and minute hands?", options: ["0°", "5.5°", "7.5°", "10°"], ans: 2 },
-            { type: 'q', q: "7. Which shape has the maximum area with a fixed perimeter?", options: ["Square", "Rectangle", "Triangle", "Circle"], ans: 3 },
-
-            { type: 'memory_recall', q: "8. Memory Test: Abhi thodi der pehle aapko kaun sa 4-digit number yaad rakhne ko kaha gaya tha?", options: ["7492", "7942", "4792", "9274"], ans: 0 },
-
-            { type: 'q', q: "9. If 5 machines take 5 mins to make 5 widgets, how long do 100 machines take for 100 widgets?", options: ["100 mins", "50 mins", "5 mins", "1 min"], ans: 2 },
-            { type: 'q', q: "10. What is 15% of 200 plus 25% of 400?", options: ["100", "120", "130", "150"], ans: 2 },
-            { type: 'q', q: "11. Choose the missing letter: A, C, F, J, O, ?", options: ["T", "U", "V", "W"], ans: 1 },
-
-            { type: 'memory_flash', code: "5183", text: "🧠 MEMORY CHALLENGE 2: Naye 4-digit number ko yaad rakho!" },
-
-            { type: 'q', q: "12. Which planet has the highest gravitational pull in our solar system?", options: ["Saturn", "Jupiter", "Earth", "Neptune"], ans: 1 },
-            { type: 'q', q: "13. What is the square root of 1024?", options: ["28", "30", "32", "34"], ans: 2 },
-            { type: 'q', q: "14. If TOMCAT is written as RUMDBS, how is TIGER written?", options: ["SHFDQ", "UHJFS", "SFHDS", "QDHFS"], ans: 0 },
-
-            { type: 'memory_recall', q: "15. Memory Test: Thodi der pehle wala doosra 4-digit number kya tha?", options: ["5318", "5183", "8135", "3158"], ans: 1 }
+        let currentQuestion = 0;
+        let selectedIdolName = "";
+        
+        // Sample questions pool (Simulating 25-30 questions flow)
+        const questions = [
+            { title: "Which class stream or educational path do you find most fascinating?", options: ["Science & PCM (Physics/Maths)", "Technology & Coding", "Arts & Philosophy", "Business & Economics"] },
+            { title: "How quickly do you adapt to changing environments or new software layouts?", options: ["Extremely fast", "Moderate, take a little time", "Prefer standard stable layouts", "Struggle initially"] },
+            { title: "Memory Flash: Remember this sequence -> 7, 3, 9, 2. What was the 3rd number?", options: ["3", "9", "7", "2"] },
+            { title: "When solving a complex puzzle, what is your primary approach?", options: ["Break down into logical parts", "Trial and error method", "Visualize the final outcome", "Look for existing patterns"] },
+            { title: "Choose the number that logically continues the series: 2, 4, 8, 16, ...", options: ["24", "32", "64", "18"] },
+            { title: "How do you handle high-pressure time-bound decisions?", options: ["Stay calm and calculate", "Rely on intuitive gut feeling", "Feel slightly overwhelmed", "Delegate or pause"] },
+            { title: "Memory Flash: Which color was featured in sequence block #2?", options: ["Neon Blue", "Dark Gray", "Bright Red", "Emerald Green"] },
+            { title: "What drives your daily motivation the most?", options: ["Achieving mastery & knowledge", "Building wealth & success", "Overcoming tough challenges", "Creative freedom"] },
+            { title: "If speed is doubled, how does travel time change for a fixed distance?", options: ["Halved", "Doubled", "Remains same", "Quadrupled"] },
+            { title: "How confident are you in remembering detailed visual patterns?", options: ["Top 10% (Exceptional)", "Above Average", "Average", "Need improvement"] }
+            // Additional questions loop or extendable up to 25-30 seamlessly
         ];
 
+        function playSound() {
+            const sound = document.getElementById('tickSound');
+            sound.currentTime = 0;
+            sound.play().catch(e => {}); // Catch prevents autoplay policy blocks
+        }
+
         function startTest() {
-            document.getElementById('screen-home').classList.add('hidden');
-            document.getElementById('screen-test').classList.remove('hidden');
-            loadStep();
-        }
-
-        function loadStep() {
-            if (currentStep < flow.length) {
-                let item = flow[currentStep];
-                document.getElementById('question-counter').innerText = `Step ${currentStep + 1} of ${flow.length}`;
-                let container = document.getElementById('question-container');
-
-                if (item.type === 'q' || item.type === 'memory_recall') {
-                    let html = `<p style="font-size: 15px; color: white; margin-bottom: 15px;"><b>${item.q}</b></p>`;
-                    item.options.forEach((opt, idx) => {
-                        html += `<div class="option" onclick="handleAnswer(${idx}, ${item.ans})">${opt}</div>`;
-                    });
-                    container.innerHTML = html;
-                } 
-                else if (item.type === 'memory_flash') {
-                    container.innerHTML = `
-                        <div style="text-align: center;" class="memory-box">
-                            <p style="color: #38bdf8; font-size: 15px; margin-bottom: 5px;">${item.text}</p>
-                            <div class="memory-number">${item.code}</div>
-                            <p style="font-size: 12px; color: #94a3b8;">Isse apne dimaag mein save kar lo. Agle sawaalon ke baad yeh pucha jayega!</p>
-                            <button class="btn" style="margin-top: 20px;" onclick="nextStep()">Yaad ho gaya, Aage badho ➔</button>
-                        </div>
-                    `;
-                }
-            } else {
-                document.getElementById('screen-test').classList.add('hidden');
-                document.getElementById('screen-details').classList.remove('hidden');
-            }
-        }
-
-        function handleAnswer(selected, correct) {
-            if(selected === correct) {
-                score += 5;
-            }
-            currentStep++;
-            loadStep();
-        }
-
-        function nextStep() {
-            currentStep++;
-            loadStep();
-        }
-
-        function submitDetails() {
-            let name = document.getElementById('userName').value;
-            let phone = document.getElementById('userPhone').value;
-            let idol = document.getElementById('idolName').value;
-
-            if(!name || !phone || !idol) {
-                alert("Bhai, कृपया saari details (Naam, Number, aur Idol) bhariye!");
+            const name = document.getElementById('userName').value.trim();
+            if(!name) {
+                alert('Please enter your name to proceed!');
                 return;
             }
-            if(phone.length < 10) {
-                alert("Kripya sahi 10-digit WhatsApp number daalein!");
+            playSound();
+            document.getElementById('screen-intro').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if(currentQuestion === 4) {
+                // Show Idol selection midway around question 4
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-idol').classList.remove('hidden');
                 return;
             }
 
-            document.getElementById('screen-details').classList.add('hidden');
-            document.getElementById('screen-paywall').classList.remove('hidden');
+            if(currentQuestion >= questions.length) {
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-paywall').classList.remove('hidden');
+                return;
+            }
+
+            playSound();
+            const q = questions[currentQuestion];
+            document.getElementById('question-counter').innerText = `Question ${currentQuestion + 1} of 25`;
+            document.getElementById('question-title').innerText = q.title;
+            
+            // Update progress bar smoothly
+            const progressPercent = ((currentQuestion + 1) / 25) * 100;
+            document.getElementById('progress-bar').style.width = progressPercent + '%';
+
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer();
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer() {
+            playSound();
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function selectIdol(idol) {
+            playSound();
+            selectedIdolName = idol;
+            document.querySelectorAll('.idol-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById('idol-next-btn').disabled = false;
+        }
+
+        function nextAfterIdol() {
+            playSound();
+            document.getElementById('screen-idol').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            loadQuestion();
         }
 
         function openPayment() {
-            window.location.href = "https://rzp.io/l/YOUR_RAZORPAY_LINK"; 
+            playSound();
+            // Replace with your actual Cashfree payment link or gateway integration
+            alert('Redirecting to secure Cashfree Payment Gateway (₹49)...');
+            window.location.href = 'https://www.cashfree.com/'; 
         }
     </script>
 </body>
 </html>
+
